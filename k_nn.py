@@ -30,9 +30,10 @@ class KNearestNeighbor(object):
         num_test = X.shape[0]
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
-        for i in range(num_test):
-            for j in range(num_train):
-                # 작성하시요
+        #print(X.shape, self.X_train.shape, dists.shape)
+        for i in range(num_test): 
+            for j in range(num_train): 
+                dists[i][j] = np.sqrt(np.sum((X[i] - self.X_train[j])**2))
         return dists
     
     # Assignment 2
@@ -41,7 +42,7 @@ class KNearestNeighbor(object):
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
         for i in range(num_test):
-            # 작성하시오
+            dists[i] = np.sqrt(np.sum((self.X_train - X[i])**2, axis=1))
         return dists
 
     # Assignment 3
@@ -50,7 +51,11 @@ class KNearestNeighbor(object):
         num_train = self.X_train.shape[0]
         dists = np.zeros((num_test, num_train))
         # Note: (a - b)^2 = -2ab + a^2 + b^2
-        # 작성하시오
+        a_sq = np.sum(X**2, axis=1, keepdims=True)
+        #print(a_sq.shape) # (500, 1)
+        b_sq = np.sum(self.X_train**2, axis=1)
+        #print(b_sq.shape) # (5000, )
+        dists = np.sqrt(-2 * np.dot(X, self.X_train.T) + a_sq + b_sq)
         return dists
 
     def predict_labels(self, dists, k=1):
